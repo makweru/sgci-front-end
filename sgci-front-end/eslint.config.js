@@ -36,6 +36,7 @@ export default [
 
   {
     languageOptions: {
+      //parser: '@babel/eslink-parser',
       ecmaVersion: 'latest',
       sourceType: 'module',
 
