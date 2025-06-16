@@ -80,7 +80,7 @@
       <div class="row" style="margin-top: 15px;">
         <div class="col-12">
           <div style="float: right;">
-            <q-btn label="Voltar" no-caps class="btn-voltar" style="margin-right: 10px;" />
+            <q-btn @click="voltar" label="Voltar" no-caps class="btn-voltar" style="margin-right: 10px;" />
             <q-btn type="submit" :label="pessoa.id ? 'Actualizar' : 'Guardar'" no-caps class="btn-cadastrar" />
           </div>
         </div>
@@ -91,7 +91,8 @@
 </template>
 
 <script>
-import { pessoaService } from 'src/sgci-api-service';
+import { useQuasar } from 'quasar';
+import { pessoaService } from 'src/services/sgci-api-service'
 import { ref } from 'vue';
 
 export default {
@@ -113,7 +114,11 @@ export default {
         numero: null
       })
     })
+
+    const $q = useQuasar()
+
     return {
+      $q,
       pessoa,
       optionsTipoPessoa: [
         {
@@ -169,14 +174,25 @@ export default {
       if (this.pessoa.id) {
         pessoaService.update(this.pessoa.id, this.pessoa).then(response => {
           console.log('Pessoa editada com sucesso.' + response)
+          this.$q.notify({ message: 'Pessoa editada com sucesso!', color: 'positive', textColor: 'white' })
+          this.voltar()
+        }).catch (erro => {
+          console.log(erro)
         })
-        return
+      } else {
+        pessoaService.create(this.pessoa).then(response => {
+          console.log("Pessoa registada com sucesso!")
+          this.$q.notify({ message: 'Pessoa registada com sucesso!', color: 'positive', textColor: 'white' })
+          console.log(response)
+          this.voltar()
+        }).catch(erro => {
+          console.log(erro)
+        })
       }
+    },
 
-      pessoaService.create(this.pessoa).then(response => {
-        console.log("Pessoa registada com sucesso!")
-        console.log(response)
-      })
+    voltar() {
+      this.$router.push('/pessoas')
     }
   }
 }

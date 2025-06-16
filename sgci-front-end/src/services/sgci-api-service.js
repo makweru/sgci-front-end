@@ -19,6 +19,20 @@ export class PessoaService {
   update (id, pessoa) {
     return apiSgci.put(this.path + '/' + id, pessoa)
   }
+
+  findAll (params, configs) {
+    const finalConfig = Object.assign({ params }, configs)
+    console.log(finalConfig)
+    return apiSgci.get(this.path, finalConfig)
+  }
+
+  delete (id) {
+    return apiSgci.delete(this.path + '/' + id)
+  }
+
+  exportar () {
+    return apiSgci.get(this.path + '/exportar-csv')
+  }
 }
 
 export const pessoaService = new PessoaService()
